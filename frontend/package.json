@@ -1,0 +1,32 @@
+{
+  "name": "basicbraindatarecorder",
+  "version": "1.0.0",
+  "description": "A basic UI for recording brain data",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "watch": "nodemon --exec electron .",
+    "watch-all": "concurrently \"npm:watch-flask\" \"npm:watch\"",
+    "watch-flask": "nodemon --watch backend --exec \"backend/backend.py\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeonardoFerrisi/neurotech-boilerplate.git"
+  },
+  "keywords": [
+    "neurotech"
+  ],
+  "author": "Leonardo Ferrisi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LeonardoFerrisi/neurotech-boilerplate/issues"
+  },
+  "homepage": "https://github.com/LeonardoFerrisi/neurotech-boilerplate#readme",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "concurrently": "^9.0.1",
+    "electron": "^32.1.2",
+    "electron-win-state": "^1.1.22",
+    "nodemon": "^3.1.7"
+  }
+}

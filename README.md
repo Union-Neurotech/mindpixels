@@ -11,7 +11,6 @@ python -m venv .venv
 
 2. Wait for the virtual environment to finish
 
-
 For Windows
 ```bash
 .venv/Scripts/activate
