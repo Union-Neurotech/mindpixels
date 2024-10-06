@@ -1,30 +1,32 @@
 import cv2
 import os 
 import random
+# from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 
-def generate_unique_random_numbers(x, n=50):
-    # Generate 50 unique random numbers between 0 and x
-    return random.sample(range(0, x+1), n)
+# Edit path to image folders
+dir = "../../assets/scenery"
 
-# Example usage:
-x = 100  # Set x to any value you prefer
-random_numbers = generate_unique_random_numbers(x)
+def randImages(count=10):
+    used = set()
+    images = os.listdir(dir)
+    for i in range(count):
+        # Get random non duplicated image
+        idx = random.randint(0, len(images)-1)
+        while idx in used:
+            idx = random.randint(0, len(images)-1)   
+        used.add(idx)         
+        img = images[idx]
 
-dir = "/Users/victorwong/Desktop/mindpixels/frontend/backend/Food Images/Food Images/"
+        # Show the image and wait for 1 second
+        path = os.path.join(dir, img)
+        print(path)
+        image = cv2.imread(path)
+        # BoardShim.insert_marker(board_shim, i)
+        cv2.imshow("image", image)
+        cv2.waitKey(1000)
 
-
-for img in os.listdir(dir):
-    path = os.path.join(dir, img)
-    path = str(path)
-    image = cv2.imread(path)
-    cv2.imshow("image", image)
-
-    if cv2.waitKey() == ord('a'):
-        print("pressed a")
-        break
-
-    cv2.waitKey(0)
-
+if __name__ == "__main__":
+    randImages(3)
 
 
 
