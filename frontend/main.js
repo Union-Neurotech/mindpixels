@@ -4,28 +4,57 @@ const axios = require('axios'); // to be used by app.js in renderer process of e
 
 let python_backend
 
-function createWindow () {
+
+async function checkUrl(url) {
+  try {
+    const response = await axios.head(url, { timeout: 5000 }); // 5 second timeout
+    console.log(`Attempting connection to URL ${url}`)
+    return response.status >= 200 && response.status < 400;
+  } catch (error) {
+    console.error('Error checking URL:', error.message);
+    return false;
+  }
+}
+
+async function createWindow () {
+
+    // command = "streamlit run ..\\backend\\app.py --server.headless true"
+    // python_backend = spawn('python', ['backend\\run_app.py', 'backend\\app.py'], 
+    //     { detached: true } // detatching will result in a separate shell spawning
+    // );
+
+    // python_backend.stdout.on('data', function (data) {
+    //     console.log("data: ", data.toString('utf8'));
+    // });
+    // python_backend.stderr.on('data', (data) => {
+    //     console.log(`stderr: ${data}`); // when error
+    // });
+
     const win = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
             nodeIntegration: true
         },
-        // show: false // Don't show the window initially
+        show: false // Don't show the window initially
     })
 
-    win.loadFile('renderer/main.html')
-    
-    python_backend = spawn('python', ['backend/backend.py'], 
-                            { detached: false } // detatching will result in a separate shell spawning
-    );
 
-    python_backend.stdout.on('data', function (data) {
-        console.log("data: ", data.toString('utf8'));
-    });
-    python_backend.stderr.on('data', (data) => {
-        console.log(`stderr: ${data}`); // when error
-    });
+    // Check if the Streamlit app is live
+    const streamlitUrl = 'http://localhost:8501';
+    const isStreamlitLive = await checkUrl(streamlitUrl);
+
+    if (!isStreamlitLive) {
+        win.loadFile('\renderer\spash.html')
+        console.log("No STREAMLIT PAGE WAS PRESENT")
+    }
+    // Display splash screen
+
+    // CODE TO START STREAMLIT APP
+    
+    win.loadURL('http://localhost:8501')
+
+    win.show()
 
 }
 
@@ -38,7 +67,7 @@ app.on('window-all-closed', () => {
         if (python_backend) {
             python_backend.kill('SIGINT'); // kill backend when electron app closes
         }
-
+        backend_command.unref()
         app.quit()
     }
 })
