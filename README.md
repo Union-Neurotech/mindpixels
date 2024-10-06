@@ -1,6 +1,9 @@
 # mindpixels
 Our Brainwaves to AI project
 
+# IMPORTANT 
+*collect-display* is for image displaying and data collection
+
 # SETUP 
 
 1. Run the following commands:
