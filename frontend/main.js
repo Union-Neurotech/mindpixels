@@ -16,16 +16,17 @@ function createWindow () {
 
     win.loadFile('renderer/main.html')
     
-    python_backend = spawn('python', ['backend/backend.py'], 
-                            { detached: false } // detatching will result in a separate shell spawning
-    );
+    // UNCOMMENT TO AUTO RUN
+    // python_backend = spawn('python', ['backend/backend.py'], 
+    //                         { detached: false } // detatching will result in a separate shell spawning
+    // );
 
-    python_backend.stdout.on('data', function (data) {
-        console.log("data: ", data.toString('utf8'));
-    });
-    python_backend.stderr.on('data', (data) => {
-        console.log(`stderr: ${data}`); // when error
-    });
+    // python_backend.stdout.on('data', function (data) {
+    //     console.log("data: ", data.toString('utf8'));
+    // });
+    // python_backend.stderr.on('data', (data) => {
+    //     console.log(`stderr: ${data}`); // when error
+    // });
 
 }
 
