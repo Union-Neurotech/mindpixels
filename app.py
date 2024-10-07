@@ -14,6 +14,11 @@ st.set_page_config(
     layout="centered",  # Layout can be "centered" or "wide"
 )
 
+col1, col2, col3 = st.columns(3)
+
+with col2: 
+    st.image(image='pixelbrain.jpg', width=200)
+
 write_center_txt(text="MINDPIXELS")
 write_center_txt(text="Generate moving images with your MIND!", type="h3")
 
@@ -35,10 +40,14 @@ if "selected_board" not in st.session_state:
 
 if st.session_state.selected_board is None:
     selected_board = st.selectbox("Select a Board to Connect", available_boards)
+
+    if selected_board != "Synthetic":
+        serial_port = st.text_input(label='serial port')
+
     # Create a button to connect
     if st.button("Connect"):
         boardID = get_boardID(selected_board)
-        st.session_state.our_eeg_device = connect(boardID=boardID)
+        st.session_state.our_eeg_device = connect(boardID=boardID, serialPort=serial_port)
         st.session_state.selected_board = selected_board  # Store the selected board in session state
         st.write(f"Connected to {selected_board}.")
 else:
