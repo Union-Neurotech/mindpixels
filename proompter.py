@@ -11,7 +11,7 @@ text2ImageModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusi
 image2VidModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-video-diffusion"
 
 headers = {
-    "Authorization": "Bearer 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",
+    "Authorization": "Bearer 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",
     "Accept": "application/json",
 }
 
