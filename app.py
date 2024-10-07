@@ -40,7 +40,7 @@ if "selected_board" not in st.session_state:
 
 if st.session_state.selected_board is None:
     selected_board = st.selectbox("Select a Board to Connect", available_boards)
-
+    serial_port = ''
     if selected_board != "Synthetic":
         serial_port = st.text_input(label='serial port')
 
@@ -67,7 +67,7 @@ if st.session_state.our_eeg_device is not None:
             # Simulate OpenCV image presentation in fullscreen
             data, st.session_state.our_eeg_device = run_opencv_presentation(board=st.session_state.our_eeg_device, 
                                                                       image_folder='assets/', 
-                                                                      display_time=2) # board should start stream in here
+                                                                      display_time=5) # board should start stream in here
             # Stop the stream after presentation
             st.write("Now Processing")
             boardID_local = st.session_state.our_eeg_device.board_id
@@ -104,6 +104,7 @@ if st.session_state.done_processing:
         if type == 'image':
             st.image(final_path, caption=f"your brain-activity generated image")
         elif type == 'video':            
+            print(final_path)
             video_file = open(final_path, "rb")
             video_bytes = video_file.read()
             st.video(video_bytes)
