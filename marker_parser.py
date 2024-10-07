@@ -12,7 +12,7 @@ def initialize_board():
     return board
 
 # Step 2: Stream Data with Markers
-def stream_data_with_markers(board, num_chunks=10, timesleep=1):
+def stream_data_with_markers(board:BoardShim, num_chunks:int=10, timesleep:int=1):
     board.start_stream()
     for i in range(num_chunks):
         time.sleep(timesleep)
@@ -20,7 +20,7 @@ def stream_data_with_markers(board, num_chunks=10, timesleep=1):
     board.stop_stream()
 
 # Step 3: Get Data
-def get_data(board):
+def get_data(board:BoardShim):
     data = board.get_board_data()
     board.release_session()
     return data
