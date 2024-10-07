@@ -42,7 +42,7 @@ else:
 # Check if the EEG device is connected
 if st.session_state.our_eeg_device is not None:
     # Status display (could be an input field or updated status text)
-    status_display = st.text_input("Status Display", value="No active processes")
+    # status_display = st.text_input("Status Display", value="No active processes")
 
     st.info("Board is still connected, you can stream data by running START")
 
@@ -53,7 +53,7 @@ if st.session_state.our_eeg_device is not None:
             # Simulate OpenCV image presentation in fullscreen
             data, st.session_state.our_eeg_device = run_opencv_presentation(board=st.session_state.our_eeg_device, 
                                                                       image_folder='assets/', 
-                                                                      display_time=2) # board should start stream in here
+                                                                      display_time=0.5) # board should start stream in here
             # Stop the stream after presentation
             st.write("Now Processing")
             boardID_local = st.session_state.our_eeg_device.board_id
@@ -83,7 +83,6 @@ if st.session_state.done_processing:
         with st.status("Generating Image"):
             st.write("Processing Request")
             final_image_path = rankings2images(best_of)
-            st.write("Propating Image net")
             st.write("Disconnecting from Board")
             st.session_state.our_eeg_device.release_session()
 

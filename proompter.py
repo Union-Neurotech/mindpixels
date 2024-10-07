@@ -12,6 +12,8 @@ def rankings2images(image_names):
 
     general_vibe = summarize_vibe(descriptions=image_vibes)
 
+    print(f'General vibe is: {general_vibe}')
+
     vibe2image(general_vibe)
 
 
@@ -30,7 +32,7 @@ def summarize_vibe(descriptions):
     :param descriptions: A list of image descriptions
     :return: A vibe summary string
     """
-    prompt = "Based on these descriptions, summarize the overall vibe or feeling of the combination of these five images: "
+    prompt = "Based on these descriptions, summarize the overall vibe or feeling of the combination of these five images. Respond only with the vibe as a description of an image to generate from this vibe. Be detailed but vague. The description of this vibe should include many visual components. Do not reference the images."
     prompt += " ".join(descriptions)
     
     # Call the OpenAI API using the latest `chat` or `completion` endpoints
@@ -54,21 +56,4 @@ def vibe2image(vibe_prompt):
 
 
 if __name__ == "__main__":
-    # Example descriptions (you can load these from a file or any other source)
-    descriptions = [
-        "A picturesque canal lined with cherry blossom trees, adorned with vibrant pink blossoms that stretch above the water, creating a breathtaking scene.",
-        "A starry night above a desert landscape, with a vast sandy expanse stretching out before a distant raised sand dune, evoking a sense of peaceful isolation.",
-        "A waterfall flows into a lake in front of a mountain under a starry sky with an aurora borealis.",
-        "A breathtaking peninsula silhouetted against a vibrant golden sunset, with its bright glow reflecting off the cloud cover and the ocean surrounding it.",
-        "A serene sunset ocean scene with a striking pink and orange sky, a small cove, an ocean wave crash, and a rock formation."
-    ]
-
-    # Step 1: Summarize the vibe from the descriptions
-    vibe_summary = summarize_vibe(descriptions)
-    print("Vibe Summary:")
-    print(vibe_summary)
-
-    # Step 2: Generate a prompt for a text-to-image generator based on the vibe summary
-    # text_image_prompt = generate_text_image_prompt(vibe_summary)
-    # print("Text-to-Image Prompt:")
-    # print(text_image_prompt)
+    pass
