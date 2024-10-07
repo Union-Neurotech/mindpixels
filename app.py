@@ -2,6 +2,7 @@ import streamlit as st
 from comms import get_boardID, connect, disconnect
 from present import run_opencv_presentation
 import time
+from ranking import rank_images
 
 def write_center_txt(text="default", type="h1"):
     st.markdown(f"<{type} style='text-align: center; color: white;'>{text}</{type}>", 
@@ -55,7 +56,20 @@ if st.session_state.our_eeg_device is not None:
                                                                       display_time=2) # board should start stream in here
             # Stop the stream after presentation
             st.write("Now Processing")
+            boardID_local = st.session_state.our_eeg_device.board_id
+
             # PROCESS THE DATA RANK IT
+            sorted_indexes_list, sorted_ranks_dict, index_of_images, sorted_images_by_rank = rank_images(images_dir = "assets/", 
+                                                                                                        data    = data, 
+                                                                                                        board   = st.session_state.our_eeg_device, 
+                                                                                                        boardID = boardID_local, 
+                                                                                                        eeg_channels_to_use = st.session_state.our_eeg_device.get_eeg_channels(boardID_local))
+            
+            if len(sorted_images_by_rank) > 5:
+                st.info(f"Best five images are {sorted_images_by_rank[0:5]}")
+            else:
+                st.info(f"Best five images are {sorted_images_by_rank}")
+
             st.write("Processing complete.")
             st.session_state.done_processing = True
 
@@ -73,6 +87,8 @@ if st.session_state.done_processing:
             time.sleep(1)
             st.write("Disconnecting from Board")
             st.session_state.our_eeg_device.release_session()
+
+            st.info("Please REFRESH (CTRL-R) to connect and stream again.")
 
         
 

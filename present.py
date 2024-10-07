@@ -5,7 +5,7 @@ import requests
 import base64
 import io
 from PIL import Image
-from brainflow import BoardShim
+from brainflow import BoardShim, BrainFlowInputParams
 import numpy as np
 
 text2ImageModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-3-medium"
@@ -74,12 +74,12 @@ def run_opencv_presentation(board:BoardShim, image_folder:str="images/", display
             img = cv2.resize(img, (screen_width, screen_height), interpolation=cv2.INTER_AREA)
             background = img  # Use the resized image directly as the background
         
+        marker = idx + 1  # Marker could be any value; using image index here
+        # Insert a marker into the EEG stream
+        print(f'Inserting Marker for image {idx} ({image_file})')
+        board.insert_marker(marker)
         # Display the image
         cv2.imshow(window_name, background)
-
-        # Insert a marker into the EEG stream
-        marker = idx + 1  # Marker could be any value; using image index here
-        board.insert_marker(marker)
 
         # Wait for the specified display time
         cv2.waitKey(display_time * 1000)
@@ -176,4 +176,11 @@ def image_to_video(image_data, image_type="jpeg", seed=2441322616, cfg_scale=1.8
 
 
 if __name__ == "__main__":
-    run_opencv_presentation(3)
+    # run_opencv_presentation_lite(3)
+
+    BoardShim.enable_dev_board_logger()
+    params = BrainFlowInputParams()
+    board = BoardShim(-1, params)
+    board.prepare_session()
+    data, board = run_opencv_presentation(board, "assets/", 1)
+    board.release_session()
