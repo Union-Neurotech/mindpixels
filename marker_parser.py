@@ -12,10 +12,10 @@ def initialize_board():
     return board
 
 # Step 2: Stream Data with Markers
-def stream_data_with_markers(board, duration=10):
+def stream_data_with_markers(board, num_chunks=10, timesleep=1):
     board.start_stream()
-    for i in range(duration):
-        time.sleep(1)
+    for i in range(num_chunks):
+        time.sleep(timesleep)
         board.insert_marker(i + 1)  # Marker value increases with time
     board.stop_stream()
 

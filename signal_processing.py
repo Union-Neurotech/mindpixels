@@ -101,7 +101,7 @@ def compare_p300s(p300_analysis_results):
 if __name__ == "__main__":
     # Main execution flow
     board = initialize_board()
-    stream_data_with_markers(board)
+    stream_data_with_markers(board, num_chunks=10, timesleep=3)
     data = get_data(board)
     marker_indices, marker_channel = find_markers(data, board)
 
