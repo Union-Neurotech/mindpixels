@@ -11,7 +11,7 @@ image2VidModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-video-di
 
 headers = {
     # Replace the API key after Bearer with your own API key
-    "Authorization": "Bearer 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",
+    "Authorization": "Bearer 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",
     "Accept": "application/json",
 }
 
