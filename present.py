@@ -15,6 +15,7 @@ def run_opencv_presentation(board:BoardShim, image_folder:str="images/", display
     
     Returns:
     - EEG data collected during the session.
+    - the board you passed in
     """
     # Get list of image files from the specified folder
     image_files = [os.path.join(image_folder, f) for f in os.listdir(image_folder) if f.endswith(('.png', '.jpg', '.jpeg'))]
