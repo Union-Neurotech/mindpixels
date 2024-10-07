@@ -48,12 +48,18 @@ if st.session_state.our_eeg_device is not None:
     if st.button("Start"):
 
         with st.status(label="Starting Data Stream", expanded=True):
-            st.session_state.our_eeg_device.start_stream()
+            # st.session_state.our_eeg_device.start_stream()
             st.write("Starting OpenCV image presentation...")
             # Simulate OpenCV image presentation in fullscreen
-            run_opencv_presentation()
+            data, st.session_state.our_eeg_device = run_opencv_presentation(board=st.session_state.our_eeg_device, 
+                                                                      image_folder='images/', 
+                                                                      display_time=2) # board should start stream in here
             # Stop the stream after presentation
             st.session_state.our_eeg_device.stop_stream()
+            st.write("Processing")
+
+            # Process data
+
             st.write("Processing complete.")
             st.session_state.done_processing = True
 
