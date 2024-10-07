@@ -1,6 +1,15 @@
 # mindpixels
 Our Brainwaves to AI project
 
+# RUNNING
+
+For basic streamlit run
+
+    streamlit run app.py
+
+To run headless (does not auto open)
+
+    streamlit run app.py --server.headless true
 # SETUP 
 
 1. Run the following commands:
