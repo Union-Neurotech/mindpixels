@@ -53,7 +53,7 @@ if st.session_state.our_eeg_device is not None:
             # Simulate OpenCV image presentation in fullscreen
             data, st.session_state.our_eeg_device = run_opencv_presentation(board=st.session_state.our_eeg_device, 
                                                                       image_folder='assets/', 
-                                                                      display_time=0.5) # board should start stream in here
+                                                                      display_time=1) # board should start stream in here
             # Stop the stream after presentation
             st.write("Now Processing")
             boardID_local = st.session_state.our_eeg_device.board_id
@@ -82,11 +82,21 @@ if st.session_state.done_processing:
 
         with st.status("Generating Image"):
             st.write("Processing Request")
-            final_image_path = rankings2images(best_of)
+            general_vibe, final_path, type = rankings2images(best_of, doimage=False)
+            
             st.write("Disconnecting from Board")
             st.session_state.our_eeg_device.release_session()
+        st.write('Result')
+        if type == 'image':
+            st.image(final_path, caption=f"your brain-activity generated image")
+        elif type == 'video':            
+            video_file = open(final_path, "rb")
+            video_bytes = video_file.read()
+            st.video(video_bytes)
 
-            st.info("Please REFRESH (CTRL-R) to connect and stream again.")
+        with st.expander("See insights"):
+            st.info(f'General Vibe: {general_vibe}')
+        st.info("Please REFRESH (CTRL-R) to connect and stream again.")
 
         
 

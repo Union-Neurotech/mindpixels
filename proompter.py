@@ -5,13 +5,13 @@ import base64
 import io
 from PIL import Image
 import os
+import uuid
 
 text2ImageModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-3-medium"
 image2VidModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-video-diffusion"
 
 headers = {
-    # Replace the API key after Bearer with your own API key
-    "Authorization": "Bearer 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",
+    "Authorization": "Bearer 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",
     "Accept": "application/json",
 }
 
@@ -20,7 +20,7 @@ with open('.api_key.json') as f:
 # Set up your OpenAI API key
 openai.api_key = data["key"]
 
-def rankings2images(image_names):
+def rankings2images(image_names, doimage=False):
 
     image_vibes = curate_images(image_names)
 
@@ -28,8 +28,12 @@ def rankings2images(image_names):
 
     print(f'General vibe is: {general_vibe}')
 
-    vibe2image(general_vibe)
-
+    resized_image, imgpath = vibe2image(general_vibe)
+    if doimage:
+        return general_vibe, imgpath, 'image'
+    else:
+        videopath = image2video(resized_image, image_type="jpeg", seed=2441322616, cfg_scale=1.8)
+        return general_vibe, videopath, 'video'
 
 from img_data import dict_images
 def curate_images(image_names) -> list[str]:
@@ -78,6 +82,7 @@ def vibe2image(prompt="Serene lake with sunset and purple wind", cfg_scale=5, se
     # Get image from text-to-image model
     imageResponse = requests.post(text2ImageModel, headers=headers, json=imagePayload)
     if imageResponse.status_code != 200:
+        print( f"Image request failed with status {imageResponse.status_code} {imageResponse.text}" )
         return f"Image request failed with status {imageResponse.status_code} {imageResponse.text}", imageResponse.status_code
     
     image_data = imageResponse.json().get('image')
@@ -97,7 +102,7 @@ def vibe2image(prompt="Serene lake with sunset and purple wind", cfg_scale=5, se
         image.save(buffered, format="JPEG", quality=quality)
 
     # Save the image locally
-    image_path = os.path.join(os.path.dirname(__file__), 'output', 'image.jpg')
+    image_path = os.path.join(os.path.dirname(__file__), 'output', f'image_{uuid.uuid4()}.jpg')
     with open(image_path, 'wb') as f:
         f.write(buffered.getvalue())
     
@@ -120,11 +125,12 @@ def image2video(image_data, image_type="jpeg", seed=2441322616, cfg_scale=1.8):
 
     # Decode and save the video content locally 
     video_bytes = base64.b64decode(video_data)
-    video_path = os.path.join(os.path.dirname(__file__), 'output', 'video.mp4')
+    video_path = os.path.join(os.path.dirname(__file__), 'output', f'video_{uuid.uuid4()}.mp4')
     with open(video_path, 'wb') as f:
         f.write(video_bytes)
 
     return video_path
 
 if __name__ == "__main__":
-    pass
+    img, image_path = vibe2image(prompt="An enchanting landscape at twilight, where nature's beauty harmonizes with architectural marvels, creating a serene and mystical atmosphere. The scene features a grand cliffside overlooking the shimmering ocean, adorned with a magnificent building perched atop a rugged stone ledge. A lush tree gracefully drapes over the glowing lights and swirling waters below, where boats, canoes, and ducks glide peacefully. In the distance, a bridge and a neatly trimmed hedge frame a long walkway leading to a short dock.")
+    print("cool")
