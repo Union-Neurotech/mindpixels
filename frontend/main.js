@@ -31,8 +31,8 @@ async function createWindow () {
     // });
 
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1080,
+        height: 920,
         webPreferences: {
             nodeIntegration: true
         },
@@ -51,7 +51,7 @@ async function createWindow () {
     // Display splash screen
 
     // CODE TO START STREAMLIT APP
-    
+    win.setTitle('MINDPIXELS: DayDreamer')
     win.loadURL('http://localhost:8501')
 
     win.show()
@@ -64,10 +64,10 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         
         // Quit child process
-        if (python_backend) {
-            python_backend.kill('SIGINT'); // kill backend when electron app closes
-        }
-        backend_command.unref()
+        // if (python_backend) {
+        //     python_backend.kill('SIGINT'); // kill backend when electron app closes
+        // }
+        // backend_command.unref()
         app.quit()
     }
 })

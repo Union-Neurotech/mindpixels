@@ -8,6 +8,11 @@ def write_center_txt(text="default", type="h1"):
     st.markdown(f"<{type} style='text-align: center; color: white;'>{text}</{type}>", 
                 unsafe_allow_html=True)
     
+st.set_page_config(
+    page_title="MINDPIXELS: DayDreamer",  # Title that appears in the browser tab
+    page_icon="🧠",  # Optional: you can also set an icon
+    layout="centered",  # Layout can be "centered" or "wide"
+)
 
 write_center_txt(text="MINDPIXELS")
 write_center_txt(text="Generate moving images with your MIND!", type="h3")
@@ -53,7 +58,7 @@ if st.session_state.our_eeg_device is not None:
             # Simulate OpenCV image presentation in fullscreen
             data, st.session_state.our_eeg_device = run_opencv_presentation(board=st.session_state.our_eeg_device, 
                                                                       image_folder='assets/', 
-                                                                      display_time=1) # board should start stream in here
+                                                                      display_time=2) # board should start stream in here
             # Stop the stream after presentation
             st.write("Now Processing")
             boardID_local = st.session_state.our_eeg_device.board_id

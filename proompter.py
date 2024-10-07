@@ -50,7 +50,7 @@ def summarize_vibe(descriptions):
     :param descriptions: A list of image descriptions
     :return: A vibe summary string
     """
-    prompt = "Based on these descriptions, summarize the overall vibe or feeling of the combination of these five images. Respond only with the vibe as a description of an image to generate from this vibe. Be detailed but vague. The description of this vibe should include many visual components. Do not reference the images."
+    prompt = "Based on these descriptions, summarize the overall vibe or feeling of the combination of these five images. Respond only with the vibe as a description of an image to generate from this vibe. Be detailed but vague. The image described must be photorealistic. The description of this vibe should include many visual components. Do not reference the images."
     prompt += " ".join(descriptions)
     
     # Call the OpenAI API using the latest `chat` or `completion` endpoints

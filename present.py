@@ -68,8 +68,9 @@ def run_opencv_presentation(board:BoardShim, image_folder:str="images/", display
         # Display the image
         cv2.imshow(window_name, background)
 
+
         # Wait for the specified display time
-        cv2.waitKey(display_time * 1000)
+        cv2.waitKey(display_time)
 
     # Stop the stream and close the OpenCV window
     board.stop_stream()
