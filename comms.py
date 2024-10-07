@@ -21,3 +21,6 @@ def connect(boardID:int=BoardIds.SYNTHETIC_BOARD.value, serialPort:str='') -> Bo
     board.prepare_session()
     return board
 
+def disconnect(board:BoardShim) -> None:
+    board.release_session()
+

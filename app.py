@@ -1,5 +1,5 @@
 import streamlit as st
-from comms import get_boardID, connect
+from comms import get_boardID, connect, disconnect
 from present import run_opencv_presentation
 import time
 
@@ -22,15 +22,21 @@ if "our_eeg_device" not in st.session_state:
 if "done_processing" not in st.session_state:
     st.session_state.done_processing = False
 
-# Dropdown for selecting the board
-selected_board = st.selectbox("Select a Board to Connect", available_boards)
+if "selected_board" not in st.session_state:
+    st.session_state.selected_board = None
 
-# Create a button to connect
-if st.button("Connect"):
-    boardID = get_boardID(selected_board)
-    st.session_state.our_eeg_device = connect(boardID=boardID)
-    # our_eeg_device = connect(boardID=boardID)
-    st.write("Connected to EEG device.")
+# Dropdown for selecting the board
+
+if st.session_state.selected_board is None:
+    selected_board = st.selectbox("Select a Board to Connect", available_boards)
+    # Create a button to connect
+    if st.button("Connect"):
+        boardID = get_boardID(selected_board)
+        st.session_state.our_eeg_device = connect(boardID=boardID)
+        st.session_state.selected_board = selected_board  # Store the selected board in session state
+        st.write(f"Connected to {selected_board}.")
+else:
+    st.write(f"Connected to {st.session_state.selected_board}.")
 
 # Check if the EEG device is connected
 if st.session_state.our_eeg_device is not None:
@@ -38,7 +44,7 @@ if st.session_state.our_eeg_device is not None:
     status_display = st.text_input("Status Display", value="No active processes")
 
     st.info("Board is still connected, you can stream data by running START")
-    
+
     if st.button("Start"):
 
         with st.status(label="Starting Data Stream", expanded=True):
@@ -54,7 +60,7 @@ if st.session_state.our_eeg_device is not None:
 # Display processing section if done
 if st.session_state.done_processing: 
         # Placeholder for video/image processing section
-        st.text_area("When process is done, the image overlay closes, and we return to the UI where your video/image is either processing or ready.")
+        st.info("When process is done, the image overlay closes, and we return to the UI where your video/image is either processing or ready.")
 
         with st.status("Generating Image"):
             st.write("Parsing patterns")
@@ -62,11 +68,9 @@ if st.session_state.done_processing:
             st.write("Propating Image net")
             time.sleep(1)
             st.write("Transcribing Dreams...")
-
-
-        if st.button("disconnect"):
+            time.sleep(1)
+            st.write("Disconnecting from Board")
             st.session_state.our_eeg_device.release_session()
-            st.session_state.done_processing = False
 
         
 
