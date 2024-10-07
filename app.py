@@ -84,7 +84,7 @@ if st.session_state.our_eeg_device is not None:
             else:
                 best_of = sorted_images_by_rank
                 
-            st.info(f"Best five images are {best_of}")
+            st.info(f"Best images are {best_of}")
             st.write("Processing complete.")
 
             st.session_state.done_processing = True
