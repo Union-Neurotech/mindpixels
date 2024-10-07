@@ -3,7 +3,7 @@ from comms import get_boardID, connect, disconnect
 from present import run_opencv_presentation
 import time
 from ranking import rank_images
-
+from proompter import rankings2images
 def write_center_txt(text="default", type="h1"):
     st.markdown(f"<{type} style='text-align: center; color: white;'>{text}</{type}>", 
                 unsafe_allow_html=True)
@@ -66,11 +66,13 @@ if st.session_state.our_eeg_device is not None:
                                                                                                         eeg_channels_to_use = st.session_state.our_eeg_device.get_eeg_channels(boardID_local))
             
             if len(sorted_images_by_rank) > 5:
-                st.info(f"Best five images are {sorted_images_by_rank[0:5]}")
+                best_of = sorted_images_by_rank[0:5]
             else:
-                st.info(f"Best five images are {sorted_images_by_rank}")
-
+                best_of = sorted_images_by_rank
+                
+            st.info(f"Best five images are {best_of}")
             st.write("Processing complete.")
+
             st.session_state.done_processing = True
 
 # Display processing section if done
@@ -79,12 +81,9 @@ if st.session_state.done_processing:
         st.info("When process is done, the image overlay closes, and we return to the UI where your video/image is either processing or ready.")
 
         with st.status("Generating Image"):
-            st.write("Parsing patterns")
-            time.sleep(1)
+            st.write("Processing Request")
+            final_image_path = rankings2images(best_of)
             st.write("Propating Image net")
-            time.sleep(1)
-            st.write("Transcribing Dreams...")
-            time.sleep(1)
             st.write("Disconnecting from Board")
             st.session_state.our_eeg_device.release_session()
 

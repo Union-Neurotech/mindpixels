@@ -6,6 +6,22 @@ with open('.api_key.json') as f:
 # Set up your OpenAI API key
 openai.api_key = data["key"]
 
+def rankings2images(image_names):
+
+    image_vibes = curate_images(image_names)
+
+    general_vibe = summarize_vibe(descriptions=image_vibes)
+
+    vibe2image(general_vibe)
+
+
+from img_data import dict_images
+def curate_images(image_names) -> list[str]:
+    vibes2return = []
+    for img in image_names:
+        vibes2return.append(dict_images[img])
+    return vibes2return
+
 def summarize_vibe(descriptions):
     """
     Function to summarize the overall vibe of the provided descriptions
@@ -32,6 +48,9 @@ def summarize_vibe(descriptions):
         
     )
     return response.choices[0].message.content
+
+def vibe2image(vibe_prompt):
+    return "IMG_PATH"
 
 
 if __name__ == "__main__":
