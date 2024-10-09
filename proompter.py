@@ -6,7 +6,6 @@ import io
 from PIL import Image
 import os
 import uuid
-import time
 
 text2ImageModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-3-medium"
 image2VidModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-video-diffusion"
@@ -21,17 +20,13 @@ with open('.api_key.json') as f:
 # Set up your OpenAI API key
 openai.api_key = data["key"]
 
-def rankings2images(image_names, doimage=False, bypass=True):
+def rankings2images(image_names, doimage=False):
 
     image_vibes = curate_images(image_names)
 
     general_vibe = summarize_vibe(descriptions=image_vibes)
 
     print(f'General vibe is: {general_vibe}')
-#    'output//video_dcb22e7c-1cfb-4521-a9ce-0ccec6190adc.mp4'
-    if bypass:
-        return general_vibe, 'output/video_805e38e4-bb12-4e96-ad91-9a646c570f56.mp4', 'video'
-    
 
     resized_image, imgpath = vibe2image(general_vibe)
     if doimage:
@@ -115,7 +110,6 @@ def vibe2image(prompt="Serene lake with sunset and purple wind", cfg_scale=5, se
     return resized_image_data, image_path
 
 def image2video(image_data, image_type="jpeg", seed=2441322616, cfg_scale=1.8):
-
     vidPayload = {
         "image": f"data:image/{image_type};base64,{image_data}",  
         "seed": seed,
