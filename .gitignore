@@ -1,2 +1,5 @@
 .venv
 node_modules
+__pycache__
+.api_key.json
+proompt.py
