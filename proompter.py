@@ -6,19 +6,25 @@ import io
 from PIL import Image
 import os
 import uuid
+from img_data import dict_images
 
 text2ImageModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-3-medium"
 image2VidModel = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-video-diffusion"
 
+with open('.api_key.json') as f:
+    data = json.load(f)
+# # Set up your OpenAI API key
+# openai.api_key = data["key"]
+
 headers = {
-    "Authorization": "Bearer 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",
+    "Authorization": f"Bearer {data['key']}",
     "Accept": "application/json",
 }
 
-with open('.api_key.json') as f:
-    data = json.load(f)
-# Set up your OpenAI API key
-openai.api_key = data["key"]
+client = openai.OpenAI(
+  base_url = "https://integrate.api.nvidia.com/v1",
+  api_key = data["key"]
+)
 
 def rankings2images(image_names, doimage=False):
 
@@ -35,7 +41,6 @@ def rankings2images(image_names, doimage=False):
         videopath = image2video(resized_image, image_type="jpeg", seed=2441322616, cfg_scale=1.8)
         return general_vibe, videopath, 'video'
 
-from img_data import dict_images
 def curate_images(image_names) -> list[str]:
     vibes2return = []
     for img in image_names:
@@ -45,29 +50,57 @@ def curate_images(image_names) -> list[str]:
 def summarize_vibe(descriptions):
     """
     Function to summarize the overall vibe of the provided descriptions
-    using OpenAI's latest API syntax.
+    using llama-3.1-405b-instruct provided through Nvidia NIM API.
     
     :param descriptions: A list of image descriptions
     :return: A vibe summary string
     """
     prompt = "Based on these descriptions, summarize the overall vibe or feeling of the combination of these five images. Respond only with the vibe as a description of an image to generate from this vibe. Be detailed but vague. The image described must be photorealistic. The description of this vibe should include many visual components. Do not reference the images."
     prompt += " ".join(descriptions)
-    
-    # Call the OpenAI API using the latest `chat` or `completion` endpoints
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",  # You can use other models like `gpt-4` if available
-        max_tokens=100,
-        temperature=0.7,
-        messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {
-            "role": "user",
-            "content": prompt
-        }
-        ]
-        
+
+    # make call to llama
+    completion = client.chat.completions.create(
+        model="meta/llama-3.1-405b-instruct",
+        messages=[{"role":"user","content":prompt}],
+        temperature=0.2,
+        top_p=0.7,
+        max_tokens=1024,
+        stream=True
     )
-    return response.choices[0].message.content
+
+    res = ""
+    for chunk in completion:
+        if chunk.choices[0].delta.content is not None:
+            res += chunk.choices[0].delta.content
+    return res
+
+
+# def summarize_vibe(descriptions):
+#     """
+#     Function to summarize the overall vibe of the provided descriptions
+#     using OpenAI's latest API syntax.
+    
+#     :param descriptions: A list of image descriptions
+#     :return: A vibe summary string
+#     """
+#     prompt = "Based on these descriptions, summarize the overall vibe or feeling of the combination of these five images. Respond only with the vibe as a description of an image to generate from this vibe. Be detailed but vague. The image described must be photorealistic. The description of this vibe should include many visual components. Do not reference the images."
+#     prompt += " ".join(descriptions)
+    
+#     # Call the OpenAI API using the latest `chat` or `completion` endpoints
+#     response = openai.chat.completions.create(
+#         model="gpt-3.5-turbo",  # You can use other models like `gpt-4` if available
+#         max_tokens=100,
+#         temperature=0.7,
+#         messages=[
+#         {"role": "system", "content": "You are a helpful assistant."},
+#         {
+#             "role": "user",
+#             "content": prompt
+#         }
+#         ]
+        
+#     )
+#     return response.choices[0].message.content
 
 def vibe2image(prompt="Serene lake with sunset and purple wind", cfg_scale=5, seed=0, steps=50, negative_prompt=""):
     imagePayload = {
