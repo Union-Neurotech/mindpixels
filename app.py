@@ -66,14 +66,14 @@ if st.session_state.our_eeg_device is not None:
             st.write("Starting OpenCV image presentation...")
             # Simulate OpenCV image presentation in fullscreen
             data, st.session_state.our_eeg_device = run_opencv_presentation(board=st.session_state.our_eeg_device, 
-                                                                      image_folder='assets/', 
+                                                                      image_folder='all_images/', 
                                                                       display_time=5) # board should start stream in here
             # Stop the stream after presentation
             st.write("Now Processing")
             boardID_local = st.session_state.our_eeg_device.board_id
 
             # PROCESS THE DATA RANK IT
-            sorted_indexes_list, sorted_ranks_dict, index_of_images, sorted_images_by_rank = rank_images(images_dir = "assets/", 
+            sorted_indexes_list, sorted_ranks_dict, index_of_images, sorted_images_by_rank = rank_images(images_dir = "all_images/", 
                                                                                                         data    = data, 
                                                                                                         board   = st.session_state.our_eeg_device, 
                                                                                                         boardID = boardID_local, 

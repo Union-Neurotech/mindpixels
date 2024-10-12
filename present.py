@@ -3,9 +3,21 @@ import os
 import random
 from brainflow import BoardShim, BrainFlowInputParams
 import numpy as np
+import pygetwindow as gw
+from pywinauto import application
 
 # Edit path to image folder
 dir = "assets/"
+
+def bring_window_to_foreground(window_name):
+    try:
+        app = application.Application()
+        window = gw.getWindowsWithTitle(window_name)[0]
+        app.connect(handle=window._hWnd)
+        app_dialog = app.window(handle=window._hWnd)
+        app_dialog.set_focus()
+    except Exception as e:
+        print(f"Error bringing window to foreground: {e}")
 
 def run_opencv_presentation(board:BoardShim, image_folder:str="images/", display_time:int=2, screen_resolution=(1920, 1080)):
     """
@@ -25,18 +37,27 @@ def run_opencv_presentation(board:BoardShim, image_folder:str="images/", display
 
     if image_files == []: print("NO IMAGE FILES, did you remember to add them?")
 
+    # Select 20 random images from the list
+    random_image_files = random.sample(image_files, min(20, len(image_files)))
+
     # Sort the images to ensure a specific order if needed
-    image_files.sort()
+    random_image_files.sort()
+
+    # # Sort the images to ensure a specific order if needed
+    # image_files.sort()
 
     # Create a fullscreen window for OpenCV
     window_name = "Image Presentation"
     cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
     cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
+    # Bring the OpenCV window to the foreground
+    bring_window_to_foreground(window_name)
+
     # Start the EEG stream (assuming the stream is not already started)
     board.start_stream()
 
-    for idx, image_file in enumerate(image_files):
+    for idx, image_file in enumerate(random_image_files):
         # Load the image and resize to fit fullscreen (assuming 1920x1080 for simplicity)
         img = cv2.imread(image_file)
         # img = cv2.resize(img, (1920, 1080))
