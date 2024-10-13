@@ -19,7 +19,7 @@ def bring_window_to_foreground(window_name):
     except Exception as e:
         print(f"Error bringing window to foreground: {e}")
 
-def run_opencv_presentation(board:BoardShim, image_folder:str="images/", display_time:int=2, screen_resolution=(1920, 1080)):
+def run_opencv_presentation(board:BoardShim, image_folder:str="images/", display_time:int=1000, screen_resolution=(1920, 1080)):
     """
     Displays images in fullscreen with markers and returns EEG data.
     

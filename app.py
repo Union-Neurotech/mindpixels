@@ -67,7 +67,7 @@ if st.session_state.our_eeg_device is not None:
             # Simulate OpenCV image presentation in fullscreen
             data, st.session_state.our_eeg_device = run_opencv_presentation(board=st.session_state.our_eeg_device, 
                                                                       image_folder='all_images/', 
-                                                                      display_time=5) # board should start stream in here
+                                                                      display_time=1000) # board should start stream in here
             # Stop the stream after presentation
             st.write("Now Processing")
             boardID_local = st.session_state.our_eeg_device.board_id
